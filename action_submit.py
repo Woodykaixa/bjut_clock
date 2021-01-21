@@ -2,6 +2,7 @@ import pytz
 import requests
 from datetime import datetime
 import os
+import json
 
 # 以下个人内容全部放到仓库的secrets中（注意其中取值字段要跟自己的一致）
 
@@ -99,7 +100,9 @@ def submit(s: requests.Session, old: dict):
 
 # 微信通知
 def send_message(key, message, clock_info):
-    send_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, message, clock_info)
+    formatted = json.dumps(clock_info, sort_keys=True, indent=4)
+    desp = f'```json\n{formatted}\n```'
+    send_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, message, desp)
     requests.get(send_url)
 
 
