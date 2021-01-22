@@ -99,8 +99,12 @@ def submit(s: requests.Session, old: dict):
 
 
 # 微信通知
-def send_message(key, message, clock_info):
-    formatted = json.dumps(clock_info, sort_keys=True, indent=4)
+def send_message(key, message, clock_info:dict):
+    loads_list = ['geo_api_info', 'geo_api_infot', 'old_city']
+    for li in loads_list:
+        clock_info[li]=json.loads(clock_info[li])
+
+    formatted = json.dumps(clock_info, sort_keys=True, indent=4).encode('utf8').decode('unicode_escape')
     desp = f'```json\n{formatted}\n```'
     send_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, message, desp)
     requests.get(send_url)
